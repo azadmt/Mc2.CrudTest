@@ -1,12 +1,12 @@
 ﻿@page "/fetchdata"
-@using Mc2.CrudTest.Domain
+@using Mc2.CrudTest.Presentation.Contract
 @inject HttpClient _http
 
-<h1>Weather forecast</h1>
+<h1>Customers</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
 
-@if (_forecasts == null)
+<button value="New">Register</button>
+@if (_customers == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -15,32 +15,34 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>BankAccountNumber</th>
+                <th>Mobile</th>
+                <th>Email</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (WeatherForecast forecast in _forecasts)
+            @foreach (RegisterCustomerModel customer in _customers)
             {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC.ToString()</td>
-                    <td>@forecast.TemperatureF.ToString()</td>
-                    <td>@forecast.Summary</td>
-                </tr>
+            <tr>
+                <td>@customer.FirstName</td>
+                <td>@customer.LastName</td>
+                <td>@customer.BankAccountNumber</td>
+                <td>@customer.PhoneNumber</td>
+                <td>@customer.EmailAddress</td>
+            </tr>
             }
         </tbody>
     </table>
 }
 
 @code {
-    private WeatherForecast[] _forecasts;
+    private RegisterCustomerModel[] _customers;
 
     protected override async Task OnInitializedAsync()
     {
-        _forecasts = await _http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        _customers = await _http.GetFromJsonAsync<RegisterCustomerModel[]>("Customer");
     }
 
 }

@@ -1,0 +1,68 @@
+﻿@page "/register"
+@using Mc2.CrudTest.Presentation.Contract
+@using Newtonsoft.Json;
+@using System.Text;
+@inject HttpClient _http
+
+<h1>Customer Registration</h1>
+<EditForm Model="@Customer" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="FirstName">FirstName</label>
+        <InputText @bind-Value=Customer.FirstName class="form-control" id="FirstName" />
+    </div>
+    <div class="form-group">
+        <label for="LastName">LastName</label>
+        <InputText @bind-Value=Customer.LastName class="form-control" id="LastName" />
+    </div>
+    <div class="form-group">
+        <label for="DateOfBirth">DateOfBirth</label>
+        <InputDate @bind-Value=Customer.DateOfBirth class="form-control" id="DateOfBirth" />
+    </div>
+    <div class="form-group">
+        <label for="PhoneNumber">PhoneNumber</label>
+        <InputText @bind-Value=Customer.PhoneNumber class="form-control" id="PhoneNumber" />
+    </div>
+    <div class="form-group">
+        <label for="EmailAddress">EmailAddress</label>
+
+        <InputText  @onblur="@CheckEmailExist" @bind-Value=Customer.EmailAddress class="form-control" id="EmailAddress" />
+        <span class="text-danger">@CustomerEmaileAddressMessage</span>
+    </div>
+    <div class="form-group">
+        <label for="BankAccountNumber">BankAccountNumber</label>
+        <InputText @bind-Value=Customer.BankAccountNumber class="form-control "  id="BankAccountNumber" />
+    </div>
+    <input type="submit" class="btn btn-primary" value="Save" />
+</EditForm>
+@code {
+    private async Task CheckEmailExist(FocusEventArgs args)
+    {
+        if (CustomerSelectedEmaileAddress.Equals(Customer.EmailAddress))
+            return ;
+
+        var response = await _http.GetAsync($"/Customer/CustomerExistByEmail/{Customer.EmailAddress}");
+        var result = await response.Content.ReadAsStringAsync();
+        IsDuplicateEmail = JsonConvert.DeserializeObject<bool>(result);
+        CustomerEmaileAddressMessage = IsDuplicateEmail ? "Your Emaile Address Taken By another customer" : "";
+        CustomerSelectedEmaileAddress = Customer.EmailAddress;
+    }
+
+    private async Task HandleValidSubmit(EditContext? editContex)
+    {
+
+        if (!editContex.Validate() || IsDuplicateEmail)
+            return;
+
+        var serialized = JsonConvert.SerializeObject(Customer);
+        var stringContent = new StringContent(serialized, Encoding.UTF8, "application/json");
+
+        await _http.PostAsync("Customer", stringContent);
+        Customer = new RegisterCustomerModel();
+
+    }
+    RegisterCustomerModel Customer = new RegisterCustomerModel();
+    string CustomerEmaileAddressMessage=string.Empty;
+    string CustomerSelectedEmaileAddress = string.Empty;
+    bool IsDuplicateEmail=false;
+}
