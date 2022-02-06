@@ -37,19 +37,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mc2.CrudTest.Application", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mc2.CrudTest.Application.Contract", "Mc2.CrudTest.Application.Contract\Mc2.CrudTest.Application.Contract.csproj", "{7A401354-83CE-41A6-BF49-DBB011F4BCB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mc2.CrudTest.Presentation.Contract", "Mc2.CrudTest.Presentation.Contract\Mc2.CrudTest.Presentation.Contract.csproj", "{D7C5A739-2911-4F64-8DF9-23A5BDA5DA9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mc2.CrudTest.Presentation.Contract", "Mc2.CrudTest.Presentation.Contract\Mc2.CrudTest.Presentation.Contract.csproj", "{D7C5A739-2911-4F64-8DF9-23A5BDA5DA9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Configuration.Autofac", "Framework.Configuration.Autofac\Framework.Configuration.Autofac.csproj", "{CEEF99CF-C136-4D5F-B1E1-73F950E453BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Framework.Configuration.Autofac", "Framework.Configuration.Autofac\Framework.Configuration.Autofac.csproj", "{CEEF99CF-C136-4D5F-B1E1-73F950E453BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Bus.MassTransit", "Framework.Bus.MassTransit\Framework.Bus.MassTransit.csproj", "{595E7AE2-EB5B-4B2B-9CBD-552A602B447A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Framework.Bus.MassTransit", "Framework.Bus.MassTransit\Framework.Bus.MassTransit.csproj", "{595E7AE2-EB5B-4B2B-9CBD-552A602B447A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadModel", "ReadModel", "{B2C43ED6-1C63-4406-A458-1499C23BFD49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mc2.CrudTest.QueryService", "Mc2.CrudTest.QueryService\Mc2.CrudTest.QueryService.csproj", "{A1BF44B2-201A-4BA5-B349-3F8ADB77A811}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mc2.CrudTest.QueryService", "Mc2.CrudTest.QueryService\Mc2.CrudTest.QueryService.csproj", "{A1BF44B2-201A-4BA5-B349-3F8ADB77A811}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mc2.CrudTest.QueryService.Contract", "Mc2.CrudTest.QueryService.Contract\Mc2.CrudTest.QueryService.Contract.csproj", "{E3D304EA-0EB0-4F71-9B0F-81C10140882F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mc2.CrudTest.QueryService.Contract", "Mc2.CrudTest.QueryService.Contract\Mc2.CrudTest.QueryService.Contract.csproj", "{E3D304EA-0EB0-4F71-9B0F-81C10140882F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.EventStore.Sql", "Framework.EventStore.Sql\Framework.EventStore.Sql.csproj", "{68A90F0E-56D1-4007-85F3-BF344B617F76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Framework.EventStore.Sql", "Framework.EventStore.Sql\Framework.EventStore.Sql.csproj", "{68A90F0E-56D1-4007-85F3-BF344B617F76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbScripts", "DbScripts", "{B285F379-9195-4812-9216-CB64C891ED9E}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Desktop\QueryDb.sql = ..\..\..\Desktop\QueryDb.sql
+		..\..\..\Desktop\writeDb.sql = ..\..\..\Desktop\writeDb.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
