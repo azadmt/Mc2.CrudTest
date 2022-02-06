@@ -1,34 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace Framework.Core.Persistence
 {
-    public static class DbConnectionFactory
-    {
-        static IConfiguration _configuration;
-        public static void SetConfiguration(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        public static IDbConnection GetReadModelDbConnection()
-        {
-            return new SqlConnection(_configuration.GetConnectionString("QueryDb"));
-        }
-
-        public static IDbConnection GetWrtieModelDbConnection()
-        {
-            return GetDbConnection(_configuration.GetConnectionString("WriteDb"));
-        }
-
-        private static IDbConnection GetDbConnection(string conection)
-        {
-            return new SqlConnection(conection);
-        }
-    }
 
     public class DocumentStore
     {

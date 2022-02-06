@@ -1,8 +1,10 @@
 ﻿using Framework.Core.Bus;
 using Mc2.CrudTest.Application.Contract.Customer;
 using Mc2.CrudTest.Presentation.Contract;
+using Mc2.CrudTest.QueryService.Contract.DataContract;
 using Mc2.CrudTest.QueryService.Contract.ServiceContract;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Mc2.CrudTest.Presentation.Server.Controllers
 {
@@ -18,12 +20,19 @@ namespace Mc2.CrudTest.Presentation.Server.Controllers
             _customerQueryService = customerQueryService;
         }
 
+        [HttpGet]
+        public ActionResult<IList<CustomerDto>> Get()
+        {
+            var customers = _customerQueryService.GetCustomers();
+            return Ok(customers);
+        }
+
         [HttpGet("CustomerExistByEmail/{email}")]
         public ActionResult<bool> Get(string email)
         {
             var isExist = _customerQueryService.CustomerExistWhitEmailAddress(email);
             return Ok(isExist);
-        } 
+        }
 
         [HttpPost]
         public ActionResult Post(RegisterCustomerModel model)

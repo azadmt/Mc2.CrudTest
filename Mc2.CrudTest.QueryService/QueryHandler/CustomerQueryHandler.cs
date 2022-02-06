@@ -24,7 +24,12 @@ namespace Mc2.CrudTest.QueryService.QueryHandler
 
         public IList<CustomerDto> GetCustomers()
         {
-            throw new NotImplementedException();
+            using (var connection = DbConnectionFactory.GetReadModelDbConnection())
+            {
+
+                return connection.Query<CustomerDto>("SELECT * FROM Customers ").ToList();
+            }
+            
         }
 
 

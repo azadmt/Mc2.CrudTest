@@ -13,7 +13,7 @@ namespace Mc2.CrudTest.QueryService.EventHandler
     {
         public async Task Consume(ConsumeContext<CustomerRegistredEvent> context)
         {
-            SqlMapper.AddTypeMap(typeof(DateTime), System.Data.DbType.DateTime2);
+          //  SqlMapper.AddTypeMap(typeof(DateTime), System.Data.DbType.DateTime2);
             string sql = "INSERT INTO Customers  Values (@Id,@FirstName,@LastName,@EmailAddress,@BankAccountNumber,@PhoneNumber,@DateOfBirth,@HasConfilict);";
             using (var connection = DbConnectionFactory.GetReadModelDbConnection())
             {

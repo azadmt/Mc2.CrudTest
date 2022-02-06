@@ -6,16 +6,36 @@ services:
     build:
       context: .
       dockerfile: Mc2.CrudTest.Presentation/Server/Dockerfile
+    depends_on:
+     - db
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    hostname:  rabbithost
+    hostname:  rabbitmq
     ports:
           - "5672:5672"
           - "15672:15672"
-     
+    
+  db:
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=1Secure*Password1          
+    #      rabbitmq:
+    #image: rabbitmq:3-management-alpine
+    #hostname: "rabbitmq"
+    #labels:
+    #        NAME: "rabbitmq"
 
-networks:
-  some-net:
-    driver: bridge
+    #    # Ports required for rabbitmq
+    #ports:
+    #        - "4369:4369"
+    #        - "5671:5671"
+    #        - "5672:5672"
+    #        - "25672:25672"
+    #        - "15671:15671"
+    #        - "15672:15672"
+#networks:
+#  some-net:
+#    driver: bridge
   
