@@ -53,8 +53,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Framework.EventStore.Sql", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbScripts", "DbScripts", "{B285F379-9195-4812-9216-CB64C891ED9E}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\Desktop\QueryDb.sql = ..\..\..\Desktop\QueryDb.sql
-		..\..\..\Desktop\writeDb.sql = ..\..\..\Desktop\writeDb.sql
+		DbScript.sql = DbScript.sql
 	EndProjectSection
 EndProject
 Global
