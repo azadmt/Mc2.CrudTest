@@ -41,11 +41,18 @@ namespace Mc2.CrudTest.Presentation.Server
 
             services.AddMassTransit(x =>
             {
+                
                 //// TODO: Auto Register Consumers
                x.AddConsumer<CustomerRegistredEventHandler>();
                 // x.UsingRabbitMq();
                 x.UsingRabbitMq((context, cfg) =>
                 {
+                    cfg.Host("rabbithost", "/", h =>
+                    {
+                        h.Username("admin");
+                        h.Password("admin");
+                    });
+
                     cfg.ReceiveEndpoint("Mc2_QueryModel", e =>
                     {
                         e.ConfigureConsumer<CustomerRegistredEventHandler>(context);
