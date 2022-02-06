@@ -15,7 +15,7 @@ namespace Mc2.CrudTest.Shared
         {
             return new BankAccountNumber(number);
         }
-
+        //I dont find  account number validate rule in task definition!!
         public static bool IsValid(string number)
         {
             return true;

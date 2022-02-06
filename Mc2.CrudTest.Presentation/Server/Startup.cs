@@ -1,10 +1,11 @@
 using Autofac;
-using  Framework.Core.Bus;
+using Framework.Core.Bus;
 using Framework.Core.Persistence;
 using MassTransit;
 using Mc2.CrudTest.Application.Contract.Customer;
 using Mc2.CrudTest.Application.CustomerHandler;
 using Mc2.CrudTest.Domain;
+using Mc2.CrudTest.Domain.Contract;
 using Mc2.CrudTest.Persistence;
 using Mc2.CrudTest.QueryService;
 using Mc2.CrudTest.QueryService.Contract.ServiceContract;
@@ -16,6 +17,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
+using Dapper;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Mc2.CrudTest.Presentation.Server
 {
@@ -41,11 +48,18 @@ namespace Mc2.CrudTest.Presentation.Server
 
             services.AddMassTransit(x =>
             {
+
                 //// TODO: Auto Register Consumers
-               x.AddConsumer<CustomerRegistredEventHandler>();
+                x.AddConsumer<CustomerRegistredEventHandler>();
                 // x.UsingRabbitMq();
                 x.UsingRabbitMq((context, cfg) =>
                 {
+                    cfg.Host("rabbitmq", "/", h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+
                     cfg.ReceiveEndpoint("Mc2_QueryModel", e =>
                     {
                         e.ConfigureConsumer<CustomerRegistredEventHandler>(context);
@@ -61,18 +75,19 @@ namespace Mc2.CrudTest.Presentation.Server
         public void ConfigureContainer(ContainerBuilder builder)
         {
             Framework.Configuration.Autofac.DependencyConfigurator.Config(builder);
-          
+
             //TODO Auto Register
             builder.RegisterType<RegisterCustomerCommandHandler>().As<ICommandHandler<RegisterCustomerCommand>>();
             builder.RegisterType<CustomerRepository>().As<ICustomerRepository>();
             builder.RegisterType<CustomerQueryService>().As<ICustomerQueryService>();
 
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventBus eventBus)
         {
+          
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -99,6 +114,56 @@ namespace Mc2.CrudTest.Presentation.Server
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
+            DbMigrationUtility.GenerateDbIfNotExist(Configuration);
         }
+
+        public class DbMigrationUtility
+        {
+            static string _connectionString;
+            public static void GenerateDbIfNotExist(IConfiguration configuration)
+            {
+    
+                _connectionString = $"Data Source={configuration["DbSettings:Server"]};User ID={configuration["DbSettings:User"]};Password={configuration["DbSettings:Password"]}";
+                if (CheckDatabaseNotExists(configuration["DbSettings:WriteDbName"]))
+                    InitDb();
+            }
+
+            private static void InitDb()
+            {
+
+                string script = File.ReadAllText($"{AppContext.BaseDirectory}//..//..//..//DbInit.sql");
+
+                // split script on GO command
+                IEnumerable<string> commandStrings = Regex.Split(script, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    foreach (string commandString in commandStrings)
+                    {
+                        if (!string.IsNullOrWhiteSpace(commandString.Trim()))
+                        {
+                            using (var command = new SqlCommand(commandString, connection))
+                            {
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+
+            private static bool CheckDatabaseNotExists(string databaseName)
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    using (var command = new SqlCommand($"SELECT db_id('{databaseName}')", connection))
+                    {
+                        connection.Open();
+                        return (command.ExecuteScalar() == DBNull.Value);
+                    }
+                }
+            }
+        }
+
     }
 }

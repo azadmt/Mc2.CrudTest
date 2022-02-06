@@ -19,4 +19,6 @@ namespace Mc2.CrudTest.Presentation.Contract
         [EmailAddress]
         public string EmailAddress { get; set; }
     }
+
+
 }
