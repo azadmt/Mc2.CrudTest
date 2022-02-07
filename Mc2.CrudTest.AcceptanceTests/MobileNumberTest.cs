@@ -41,5 +41,16 @@ namespace Mc2.CrudTest.AcceptanceTests
             result.Should().Throw<ArgumentException>().WithMessage($"{input} is not a valid mobile number!!!");
         }
 
+        [Theory]
+        [InlineData("988727646102")]
+        [InlineData("62112345678")]
+        [InlineData("67755666777")]
+
+        public void MobileNumber_WhithOut_International_Symbol_Is_Not_Valid(string input)
+        {
+            var result =  MobileNumber.IsValid(input);
+            result.Should().BeFalse();
+        }
+
     }
 }
