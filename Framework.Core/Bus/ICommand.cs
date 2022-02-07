@@ -2,7 +2,7 @@
 {
     public interface ICommand
     {
-        CommandValidationResult Validate();
+        void Validate();
     }
 
     public abstract class CommandBase : ICommand
@@ -16,10 +16,11 @@
         }
 
         public abstract void RunValidationRules();
-        public  CommandValidationResult Validate()
+        public void Validate()
         {
             RunValidationRules();
-            return validationResult;
+            if (validationResult.HasError())
+                throw new System.Exception(string.Join(",", validationResult.ValidationErrors));
         }
     }
 }

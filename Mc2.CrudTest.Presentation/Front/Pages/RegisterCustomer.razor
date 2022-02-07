@@ -2,7 +2,10 @@
 @using Mc2.CrudTest.Presentation.Contract
 @using Newtonsoft.Json;
 @using System.Text;
+@using Blazored.Toast.Configuration
+@using System.Web;
 @inject HttpClient _http
+@inject IToastService  toastService
 
 <h1>Customer Registration</h1>
 <EditForm Model="@Customer" OnValidSubmit="@HandleValidSubmit">
@@ -20,26 +23,33 @@
         <InputDate @bind-Value=Customer.DateOfBirth class="form-control" id="DateOfBirth" />
     </div>
     <div class="form-group">
-        <label for="PhoneNumber">PhoneNumber</label>
+        <label for="PhoneNumber">PhoneNumber (whith region code ex:+989127646102)</label>
         <InputText @bind-Value=Customer.PhoneNumber class="form-control" id="PhoneNumber" />
     </div>
     <div class="form-group">
         <label for="EmailAddress">EmailAddress</label>
 
-        <InputText  @onblur="@CheckEmailExist" @bind-Value=Customer.EmailAddress class="form-control" id="EmailAddress" />
+        <InputText @onblur="@CheckEmailExist" @bind-Value=Customer.EmailAddress class="form-control" id="EmailAddress" />
         <span class="text-danger">@CustomerEmaileAddressMessage</span>
     </div>
     <div class="form-group">
         <label for="BankAccountNumber">BankAccountNumber</label>
-        <InputText @bind-Value=Customer.BankAccountNumber class="form-control "  id="BankAccountNumber" />
+        <InputText @bind-Value=Customer.BankAccountNumber class="form-control " id="BankAccountNumber" />
     </div>
     <input type="submit" class="btn btn-primary" value="Save" />
 </EditForm>
+
+<BlazoredToasts Position="ToastPosition.BottomRight"
+                Timeout="10"
+                IconType="IconType.FontAwesome"
+                SuccessClass="success-toast-override"
+                SuccessIcon="fa fa-thumbs-up"
+                ErrorIcon="fa fa-bug"/>
 @code {
     private async Task CheckEmailExist(FocusEventArgs args)
     {
         if (CustomerSelectedEmaileAddress.Equals(Customer.EmailAddress))
-            return ;
+            return;
 
         var response = await _http.GetAsync($"/Customer/CustomerExistByEmail/{Customer.EmailAddress}");
         var result = await response.Content.ReadAsStringAsync();
@@ -57,12 +67,22 @@
         var serialized = JsonConvert.SerializeObject(Customer);
         var stringContent = new StringContent(serialized, Encoding.UTF8, "application/json");
 
-        await _http.PostAsync("Customer", stringContent);
-        Customer = new RegisterCustomerModel();
+        var response = await _http.PostAsync("Customer", stringContent);
+        if (response.IsSuccessStatusCode)
+        {
+            toastService.ShowSuccess("Your Registration Request Submited");
+            Customer = new RegisterCustomerModel();
+        }
+        else
+        {
+            var exception = await response.Content.ReadAsStringAsync();
+            toastService.ShowError(exception);
+        }
+
 
     }
     RegisterCustomerModel Customer = new RegisterCustomerModel();
-    string CustomerEmaileAddressMessage=string.Empty;
+    string CustomerEmaileAddressMessage = string.Empty;
     string CustomerSelectedEmaileAddress = string.Empty;
-    bool IsDuplicateEmail=false;
+    bool IsDuplicateEmail = false;
 }

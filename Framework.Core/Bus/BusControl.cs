@@ -7,7 +7,7 @@ namespace Framework.Core.Bus
     {
         private readonly IContainer _container;
 
-        public BusControl( IContainer container)
+        public BusControl(IContainer container)
         {
             _container = container;
         }
@@ -16,9 +16,7 @@ namespace Framework.Core.Bus
         {
             try
             {
-                var commandValidationResult = command.Validate();
-                if (commandValidationResult.HasError())
-                    throw new CommandNotValidException(string.Join(",", commandValidationResult.ValidationErrors));
+                command.Validate();
 
                 var handler = _container.Resolve<ICommandHandler<TCommand>>();
 
@@ -27,8 +25,7 @@ namespace Framework.Core.Bus
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw new CommandExecutionException(ex.Message, ex);
             }
         }
     }

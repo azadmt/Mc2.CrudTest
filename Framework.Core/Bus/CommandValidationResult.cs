@@ -17,9 +17,9 @@ namespace Framework.Core.Bus
         }
     }
 
-    public class CommandNotValidException : Exception
+    public class CommandExecutionException : Exception
     {
-        public CommandNotValidException(string message) : base(message)
+        public CommandExecutionException(string message, Exception innerException = null) : base(message, innerException)
         {
 
         }
