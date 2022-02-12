@@ -6,8 +6,13 @@ services:
     build:
       context: .
       dockerfile: Mc2.CrudTest.Presentation/Server/Dockerfile
+    volumes:
+      - ./:/app
     depends_on:
      - db
+    ports:
+      - "80:80"
+      - "443:443"
 
   rabbitmq:
     image: rabbitmq:3-management-alpine

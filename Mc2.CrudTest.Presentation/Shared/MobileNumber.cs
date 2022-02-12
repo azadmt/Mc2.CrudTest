@@ -25,18 +25,28 @@ namespace Mc2.CrudTest.Shared
 
         public static bool IsValid(string number)
         {
+            if (IsValidPhoneNumber(number, out PhoneNumberType? phoneNumberType) )
+            {
+                return phoneNumberType is PhoneNumberType.MOBILE or PhoneNumberType.FIXED_LINE_OR_MOBILE;
+            }
+
+            return false;
+        }
+
+        private static bool IsValidPhoneNumber(string number, out PhoneNumberType? phoneNumberType)
+        {
             PhoneNumberUtil phoneUtil = PhoneNumberUtil.GetInstance();
             try
             {
-                var mobileNumber = GetPhoneNumber(number);
-                return (phoneUtil.IsValidNumber(mobileNumber) && phoneUtil.GetNumberType(mobileNumber) == PhoneNumberType.MOBILE);
-
+                PhoneNumber mobileNumber = GetPhoneNumber(number);
+                phoneNumberType = phoneUtil.GetNumberType(mobileNumber);
+                return true;
             }
             catch
             {
+                phoneNumberType = null;
                 return false;
             }
-
         }
 
         private static PhoneNumber GetPhoneNumber(string number)

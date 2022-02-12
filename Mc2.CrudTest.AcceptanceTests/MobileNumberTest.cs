@@ -9,10 +9,11 @@ namespace Mc2.CrudTest.AcceptanceTests
     {
         [Theory]
         [InlineData("+989127646102")]//Iran
+        [InlineData("+16156382030")]//US
         [InlineData("+66812345678")]//Philippines
         [InlineData("+61455666777")]//Australia
 
-        public void Should_Create_MobileNumber_Whith_Valid_International_Input_Format(string input)
+        public void Should_Create_MobileNumber_With_Valid_International_Input_Format(string input)
         {
             var result = MobileNumber.Create(input);
             result.Should().NotBeNull();
